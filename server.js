@@ -37,11 +37,11 @@ app.post("/shops", function (req, res) {
 			let dataObj = JSON.parse(data);
 			let shopsArray = dataObj.shops;
 			let maxid = shopsArray.reduce(
-				(acc, curr) => (curr.shopId > acc ? curr.shopId : acc),
+				(acc, curr) => (curr.shopid > acc ? curr.shopid : acc),
 				0
 			);
 			let newid = maxid + 1;
-			let newShop = { ...body, shopId: newid };
+			let newShop = { ...body, shopid: newid };
 			shopsArray.push(newShop);
 			dataObj.shops = shopsArray;
 			let data1 = JSON.stringify(dataObj);
@@ -68,11 +68,11 @@ app.post("/products", function (req, res) {
 			let dataObj = JSON.parse(data);
 			let { products } = dataObj;
 			let maxid = products.reduce(
-				(acc, curr) => (curr.productId > acc ? curr.productId : acc),
+				(acc, curr) => (curr.productid > acc ? curr.productid : acc),
 				0
 			);
 			let newid = maxid + 1;
-			let newProduct = { productId: newid, ...body };
+			let newProduct = { productid: newid, ...body };
 			products.push(newProduct);
 			dataObj.products = products;
 			let data1 = JSON.stringify(dataObj);
@@ -92,7 +92,7 @@ app.put("/products/:id", function (req, res) {
 		else {
 			let dataObj = JSON.parse(data);
 			let { products } = dataObj;
-			let index = products.findIndex((st) => st.productId === id);
+			let index = products.findIndex((st) => st.productid === id);
 			if (index >= 0) {
 				let productToUpdate = products[index];
 				let updatedProduct = { ...productToUpdate, ...body };
@@ -116,12 +116,12 @@ app.get("/purchases", (req, res) => {
 			let { purchases, shops, products } = JSON.parse(data);
 			let arr1 = [...purchases];
 			if (shop) {
-				let id = +shops.find((s) => s.name === shop).shopId;
-				arr1 = arr1.filter((a) => a.shopId === +id);
+				let id = +shops.find((s) => s.name === shop).shopid;
+				arr1 = arr1.filter((a) => a.shopid === +id);
 			}
 			if (product){
                 productArray = product.split(",");
-                let ids = products.reduce((acc,curr)=>productArray.find(p=>p===curr.productName)? [...acc,curr.productId] : acc,[])
+                let ids = products.reduce((acc,curr)=>productArray.find(p=>p===curr.productname)? [...acc,curr.productid] : acc,[])
                 console.log(ids)
                 arr1 = arr1.filter((a) => ids.findIndex(i=>i===a.productid)>=0 );
             } 
@@ -144,7 +144,7 @@ app.get("/purchases/shops/:id", (req, res) => {
 	let id = +req.params.id;
 	fs.readFile(fname, (err, data) => {
 		if (err) res.status(404).send(err);
-		else res.send(JSON.parse(data).purchases.filter((p) => p.shopId === id));
+		else res.send(JSON.parse(data).purchases.filter((p) => p.shopid === id));
 	});
 });
 
@@ -157,22 +157,22 @@ app.get("/purchases/products/:id", (req, res) => {
 });
 
 app.get("/totalPurchase/shop/:id", (req, res) => {
-	let shopId = +req.params.id;
+	let shopid = +req.params.id;
 	fs.readFile(fname, (err, data) => {
 		if (err) res.status(404).send(err);
 		else {
 			let { purchases } = JSON.parse(data);
 
 			const totalPurchaseByProduct = purchases
-				.filter((purchase) => purchase.shopId === shopId)
+				.filter((purchase) => purchase.shopid === shopid)
 				.reduce((acc, purchase) => {
-					const productId = purchase.productid;
+					const productid = purchase.productid;
 					const quantity = purchase.quantity;
 					let price = purchase.price;
-					if (acc[productId]) {
-						acc[productId] += quantity * price;
+					if (acc[productid]) {
+						acc[productid] += quantity * price;
 					} else {
-						acc[productId] = quantity * price;
+						acc[productid] = quantity * price;
 					}
 					return acc;
 				}, {});
@@ -192,13 +192,13 @@ app.get("/totalPurchase/product/:id", (req, res) => {
 			const totalPurchaseByShop = purchases
 				.filter((purchase) => purchase.productid === productid)
 				.reduce((acc, purchase) => {
-					const shopId = purchase.shopId;
+					const shopid = purchase.shopid;
 					const quantity = purchase.quantity;
 					let price = purchase.price;
-					if (acc[shopId]) {
-						acc[shopId] += quantity * price;
+					if (acc[shopid]) {
+						acc[shopid] += quantity * price;
 					} else {
-						acc[shopId] = quantity * price;
+						acc[shopid] = quantity * price;
 					}
 					return acc;
 				}, {});
@@ -220,7 +220,7 @@ app.post("/purchases", function (req, res) {
 				let dataObj = JSON.parse(data);
 				let { purchases } = dataObj;
 				let maxid = purchases.reduce(
-					(acc, curr) => (curr.purchaseId > acc ? curr.purchaseId : acc),
+					(acc, curr) => (curr.purchaseid > acc ? curr.purchaseid : acc),
 					0
 				);
 				let newid = maxid + 1;
