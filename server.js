@@ -116,14 +116,11 @@ app.get("/purchases", (req, res) => {
 			let { purchases, shops, products } = JSON.parse(data);
 			let arr1 = [...purchases];
 			if (shop) {
-				let id = +shops.find((s) => s.name === shop).shopid;
-				arr1 = arr1.filter((a) => a.shopid === +id);
+				arr1 = arr1.filter((a) => a.shopid === +shop);
 			}
 			if (product){
-                productArray = product.split(",");
-                let ids = products.reduce((acc,curr)=>productArray.find(p=>p===curr.productname)? [...acc,curr.productid] : acc,[])
-                console.log(ids)
-                arr1 = arr1.filter((a) => ids.findIndex(i=>i===a.productid)>=0 );
+                let ids = product.split(",")
+				arr1 = arr1.filter((a) => ids.findIndex(i=>i==a.productid)>=0 );
             } 
 			if (sort) {
 				if (sort === "QtyAsc") arr1.sort((a, b) => a.quantity - b.quantity);
